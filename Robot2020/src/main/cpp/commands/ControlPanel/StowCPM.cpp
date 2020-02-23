@@ -14,11 +14,14 @@ StowCPM::StowCPM(ControlPanelManipulator& controlPanelManipulator) {
 }
 
 // Called when the command is initially scheduled.
-void StowCPM::Initialize() {
-}
+void StowCPM::Initialize() {}
+
 // Called repeatedly when this Command is scheduled to run
 void StowCPM::Execute() {
-    ControlPanelManipulator::GetInstance().setPosition(StowPosition);
+#ifdef DISPLAY_COMMAND_MESSAGES
+  std::cout << "StowCPM Command Executing" << std::endl;
+#endif 
+  ControlPanelManipulator::GetInstance().setPosition(StowPosition);
 }
 
 // Called once the command ends or is interrupted.

@@ -19,6 +19,9 @@ void ManuallySpinControlPanel::Initialize() {
 }
 // Called repeatedly when this Command is scheduled to run
 void ManuallySpinControlPanel::Execute() {
+#ifdef DISPLAY_COMMAND_MESSAGES
+  std::cout << "ManuallySpinControlPanel Command Executing" << std::endl;
+#endif 
     double currentPosition = ControlPanelManipulator::GetInstance().read_encoder_position();
     double desiredMotorRotations = Stage2Rotations * DiameterOfControlePanel/DiameterOfDriverWheel;
 

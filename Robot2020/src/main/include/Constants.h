@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define DISPLAY_COMMAND_MESSAGES 1        //Comment this line out when you don't want to display the messages when each command runs
+
 /**
  * The Constants header provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants.  This should not be used for any other
@@ -83,6 +85,12 @@ namespace constants
 
         constexpr int kPositionPIDPort = 1;
 
+        enum DriveTrainMode_t
+        {
+            NORMAL
+        ,   PRECISION
+        };
+
         namespace auto_mode
         {
             constexpr units::feet_per_second_t kMaxVelocity { 10.0 };
@@ -134,19 +142,26 @@ namespace constants
 
     namespace control_panel_manipulator
     {
-       const units::volt_t ControlPanelCounterClockwiseVoltage=1_V;
-       const units::volt_t ControlPanelClockwiseVoltage = -1_V;
+        const units::volt_t ControlPanelCounterClockwiseVoltage=1_V;
+        const units::volt_t ControlPanelClockwiseVoltage = -1_V;
 
-       const int kCPMDeployMotorID = -1;    //TODO: set appropriate motor id
-       const int DeployPosition = -1;       //TODO: set deploy position
-       const int StowPosition = -1;         //TODO: set stow position
+        const int kCPMDeployMotorID = -1;    //TODO: set appropriate motor id
+        const int DeployPosition = -1;       //TODO: set deploy position
+        const int StowPosition = -1;         //TODO: set stow position
 
-       const int kCPMSpinMotorID = -1;      //TODO: set appropriate motor id
+        const int kCPMSpinMotorID = -1;      //TODO: set appropriate motor id
 
-       const double Stage2Rotations = 3.5;
+        const double Stage2Rotations = 3.5;
 
-       const double DiameterOfControlePanel = 32;   //[in]
-       const double DiameterOfDriverWheel = 4;      //[in]
+        const double DiameterOfControlePanel = 32;   //[in]
+        const double DiameterOfDriverWheel = 4;      //[in]
+
+        enum CPMMode_t
+        {
+            MANUAL
+        ,   AUTO_SPIN
+        ,   AUTO_COLOR
+        };
     }
 
     namespace limelight

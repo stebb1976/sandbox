@@ -18,12 +18,15 @@ void AutomaticallySpinControlPanel::Initialize() {
 }
 // Called repeatedly when this Command is scheduled to run
 void AutomaticallySpinControlPanel::Execute() {
-    double currentPosition = ControlPanelManipulator::GetInstance().read_encoder_position();
-    double desiredMotorRotations = Stage2Rotations * DiameterOfControlePanel/DiameterOfDriverWheel;
+#ifdef DISPLAY_COMMAND_MESSAGES
+  std::cout << "AutomaticallySpinControlPanel Command Executing" << std::endl;
+#endif
+  double currentPosition = ControlPanelManipulator::GetInstance().read_encoder_position();
+  double desiredMotorRotations = Stage2Rotations * DiameterOfControlePanel/DiameterOfDriverWheel;
 
-    double FinalPosition = currentPosition + desiredMotorRotations;
+  double FinalPosition = currentPosition + desiredMotorRotations;
 
-    ControlPanelManipulator::GetInstance().setPosition(FinalPosition);
+  ControlPanelManipulator::GetInstance().setPosition(FinalPosition);
 }
 
 // Called once the command ends or is interrupted.

@@ -46,6 +46,5 @@ void RobotContainer::ConfigureButtonBindings() {
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
-  // Runs the chosen command in autonomous
-  return new frc2::InstantCommand([] {});
+      
 }

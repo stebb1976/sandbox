@@ -32,6 +32,8 @@
 
 #include "commands/Serializer/VBeltOff.h"
 
+#include "commands/Shooter/SpinUp.h"
+#include "commands/Shooter/Shoot.h"
 #include "commands/Shooter/SpinUp_and_Shoot.h"
 #include "commands/Shooter/IdleShooter.h"
 
@@ -44,9 +46,11 @@
 #include "commands/Lift/ExtendLift.h"
 #include "commands/Lift/LengthenWinch.h"
 #include "commands/Lift/ShortenWinch.h"
+#include "commands/Lift/BalanceOnLift.h"
 
 
 using namespace frc;
+using namespace constants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -70,7 +74,7 @@ class RobotContainer {
   frc::XboxController m_controller_1 { constants::oi::kDriverXboxControllerPort1 };
 
   ///////////////////////////////////////////////////////////////////////////////////////
-  //Subsystems
+  //Subsystems (Use Singleton Method for Instantiations)
   ///////////////////////////////////////////////////////////////////////////////////////
   Drivetrain& m_drivetrain = Drivetrain::GetInstance();
   Intake& m_intake = Intake::GetInstance();
@@ -82,16 +86,30 @@ class RobotContainer {
   ///////////////////////////////////////////////////////////////////////////////////////
   //Commands
   ///////////////////////////////////////////////////////////////////////////////////////
-  Deploy_and_Suck m_deployAndSuckCommand {m_intake};
+
+  //Collect & Shoot
+  DeployIntake m_deployIntake {m_intake};
+  Suck m_suck {m_intake};
   VBeltForward m_vBeltForwardCommand {m_serializer};
   Preload m_preloadCommand {m_shooter};
-  CollectBalls m_CollectBallsCommand {m_intake, m_serializer, m_shooter};
+  CollectBalls m_CollectBallsCommands {m_intake, m_serializer, m_shooter};   //Parallel Command Group
+  SpinUp m_spinUp {m_shooter};  
+  Shoot m_shoot {m_shooter};
+  SpinUp_and_Shoot m_spinUpAndShootCommands {m_spinUp, m_shoot};    //Sequential Command Group
+  RetractIntake m_retractIntake {m_intake};
 
   DeployCPM m_deployCPMCommand {m_controlPanelManipulator};
   StowCPM m_stowCPMCommand {m_controlPanelManipulator};
   AutomaticallySpinControlPanel m_automaticallySpinControlPanelCommand {m_controlPanelManipulator};
   ManuallySpinControlPanel m_manuallySpinControlPanelCommand {m_controlPanelManipulator, m_controller_0};
-  // MoveControlPanelToColor m_spinCPMCWCommand {m_controlPanelManipulator};
+  // MoveControlPanelToColor m_moveControlPanelToColorCommand {m_controlPanelManipulator};
+
+  //Lift
+  // DeployLift m_deployLiftCommand {m_lift};
+  // StoyLift m_stoyLiftCommand {m_lift};
+  ExtendLift m_extendLiftCommand {m_lift};
+  RetractLift m_retractLiftCommand {m_lift};
+  BalanceOnLift m_balanceOnLift {m_lift};
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //Buttons
@@ -99,11 +117,11 @@ class RobotContainer {
   //Drivetrain (Non Default Commands)
   //sfs: You may want a slower drivetrain for lining up shoots.
   //sfs: You could use a button to toggle in and out of a slower response drivetrain mode
-  frc2::JoystickButton m_precisionDrivetrainControlButton { &m_controller_0, (int)XboxController::Button::kB };   //Toggle button to switch between normal and precision mode
+  frc2::JoystickButton m_toggleDrivetrainModeControlButton { &m_controller_0, (int)XboxController::Button::kB };   //Toggle button to switch between normal and precision mode
 
   //Collect & Shoot Balls
-  frc2::JoystickButton m_retractIntakeButton { &m_controller_1, (int)XboxController::Button::kX };
   frc2::JoystickButton m_collectBallsButton { &m_controller_1, (int)XboxController::Button::kBumperRight };   //Deploy (if not deployed / Suck balls / Move ball to shooter)
+  frc2::JoystickButton m_retractIntakeButton { &m_controller_1, (int)XboxController::Button::kX };
   frc2::JoystickButton m_enableLimeLightDrivetrainControlButton { &m_controller_0, (int)XboxController::Button::kA };   //Hold down button
   frc2::JoystickButton m_shootButton { &m_controller_0, (int)XboxController::Button::kBumperLeft };
   // frc2::JoystickButton m_manuallyAdjustShooterSpeedButton { &m_controller_0, (int)XboxController::Button::kBumperLeft };
@@ -111,9 +129,9 @@ class RobotContainer {
 
   //Spin Control Panel
   frc2::JoystickButton m_toggleCPMDeploymentButton { &m_controller_1, (int)XboxController::Button::kY };
-  frc2::JoystickButton m_toggleSpinControlPanelModeButton_ { &m_controller_1, (int)XboxController::Button::kA };    //Toggle between manual control and automatic control
-  // frc2::JoystickButton m_manuallySpinControlPanelButton_ { &m_controller_1, m_controller_0 };    //right trigger = clockwise, left trigger = counter clockwise
-  frc2::JoystickButton m_automaticallySpinControlPanelButton_ { &m_controller_1, (int)XboxController::Button::kA };
+  frc2::JoystickButton m_toggleSpinControlPanelModeButton { &m_controller_1, (int)XboxController::Button::kA };    //Toggle between manual control and automatic control
+  frc2::JoystickButton m_manuallySpinControlPanelButton { &m_controller_1, (int)XboxController::Button::kA };    //right trigger = clockwise, left trigger = counter clockwise
+  frc2::JoystickButton m_automaticallySpinControlPanelButton { &m_controller_1, (int)XboxController::Button::kA };
   // frc2::JoystickButton m_moveControlPanelToColorButton_ { &m_controller_1, (int)XboxController::Button::kA };
   
   //Lift

@@ -24,35 +24,37 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
   // Configure your button bindings here
 
-  //Spin Control Panel
-  //sfs: Need a command to deploy control panel manipulator
-  // toggleCPMDeploymentButton_.WhenPressed(m_deployCPMCommand);
-
-    //Drivetrain (Non Default Commands)
-  //sfs: You may want a slower drivetrain for lining up shoots.
-  //sfs: You could use a button to toggle in and out of a slower response drivetrain mode
+  //Drivetrain (Non Default Commands)
+  m_toggleDrivetrainModeControlButton.WhenPressed([this] {m_drivetrain.DriveTrainMode = (m_drivetrain.DriveTrainMode==drivetrain::NORMAL) ? drivetrain::PRECISION : drivetrain::NORMAL;});
 
   //Capture & Shoot Balls
-  // collectBallsButton_.WhenPressed(CollectBalls(intake_, serializer_, shooter_));
-  // collectBallsButton_.WhenReleased(DontSuck(intake_));
-  // retractIntakeButton_.WhenPressed(RetractIntake(intake_));
+  m_collectBallsButton.WhenPressed(&m_CollectBallsCommands);
+  m_retractIntakeButton.WhenPressed(m_retractIntake);
+  m_shootButton.WhileHeld(&m_spinUpAndShootCommands);
+  //sfs: Do you want a way to adjust the shooter speed?
 
-  // shooterButton_.WhileHeld(SpinUp_and_Shoot(shooter_));
-  // //sfs: Do you want a way to adjust the shooter speed?
+  //Control Panel
+  m_toggleCPMDeploymentButton.WhenPressed([this] {(m_controlPanelManipulator.IsDeployed()) ? m_stowCPMCommand.Schedule() : m_deployCPMCommand.Schedule();});
+  m_automaticallySpinControlPanelButton.WhenPressed(m_automaticallySpinControlPanelCommand);
+  m_toggleSpinControlPanelModeButton.WhenPressed([this] 
+    {
+      switch(m_controlPanelManipulator.GetMode()){
+        case MANUAL:
+          m_manuallySpinControlPanelButton.WhileHeld(m_manuallySpinControlPanelCommand);    //
+          break;
+        case AUTO_SPIN:
+          m_automaticallySpinControlPanelCommand.Schedule();    //May
+          break;
+        case AUTO_COLOR:
+        //   m_moveControlPanelToColorCommand.Schedule();
+          break;
+      }
+    });
 
-  // //Spin Control Panel
-  // //sfs: Need a command to deploy control panel manipulator
-  // toggleCPMDeploymentButton_.WhenPressed(SpinControlPanel(controlPanelManipulator_));
-  // //sfs: Need manual control of the control panel spinning, this is in addition to the fixed revolutions control.
-  // //sfs: Do we want to have an automatic mode to move the control panel to a particular color?
-
-  // //Lift & Balance
-  // //sfs: Deploy (Extend) Lift
-  // //ToggleLiftExtensionButton.ToggleWhenPressed(ExtendLift(lift_));
-  // //sfs: Raise Robot
-  // //LengthenWinchButton.WhenHeld(ShortenWinch(lift_));
-  // //ShortenWinchButton.WhenHeld(LengthenWinch(lift_));
-  // //sfs: Balance Activator Switch (Balance on bar) 
+  //Lift & Balance
+  // m_toggleLiftDeploymentButton.WhenPressed([this] {(m_lift.IsDeployed()) ? m_stoyLiftCommand.Schedule() : m_deployLiftCommand.Schedule();});
+  // m_toggleLiftDeploymentButton.WhenPressed([this] {(m_lift.IsExtended()) ? m_retractLiftCommand.Schedule() : m_extendLiftCommand.Schedule();});
+  m_toggleLiftDeploymentButton.WhenPressed([this] {(m_lift.IsExtended()) ? m_retractLiftCommand.Schedule() : m_extendLiftCommand.Schedule(); m_balanceOnLift.Schedule();});
 }
 
 // frc2::Command* RobotContainer::GetAutonomousCommand() {

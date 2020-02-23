@@ -7,18 +7,28 @@
 
 #pragma once
 
+#include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include <frc2/command/SequentialCommandGroup.h>
 
-#include "commands/Shooter/Shoot.h"
-#include "commands/Shooter/SpinUp.h"
+#include "subsystems/Lift.h"
 
-#include "subsystems/Shooter.h"
-
-class SpinUp_and_Shoot
-    : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 SpinUp_and_Shoot> {
+/**
+ * An example command.
+ *
+ * <p>Note that this extends CommandHelper, rather extending CommandBase
+ * directly; this is crucially important, or else the decorator functions in
+ * Command will *not* work!
+ */
+class BalanceOnLift
+    : public frc2::CommandHelper<frc2::CommandBase, BalanceOnLift> {
  public:
-  SpinUp_and_Shoot(Shooter& shooter);
-  SpinUp_and_Shoot(SpinUp& spinUp, Shoot& shoot);
+  BalanceOnLift(Lift& lift);
+
+  void Initialize() override;
+
+  void Execute() override;
+
+  void End(bool interrupted) override;
+
+  bool IsFinished() override;
 };

@@ -17,19 +17,19 @@ double Shooter::GetSensorVelocity(){
     return left.GetSelectedSensorVelocity();
 }
 
-// void Shooter::ShootWithDistanceEstimation(units::foot_t distanceToTarget)
-// {   
-//     /*
-//     // 1. Turn a distance into a velocity using numerical analysis.
-//     // 2. Set shooter to that velocity.
-//     if (distanceToTarget > constants::shooter::kDistanceUpperBound || distanceToTarget < constants::shooter::kDistanceLowerBound)
-//         INFO_LOG("Current distance to target is out of bounds.");
+void Shooter::ShootWithDistanceEstimation(units::foot_t distanceToTarget)
+{   
+    /*
+    // 1. Turn a distance into a velocity using numerical analysis.
+    // 2. Set shooter to that velocity.
+    if (distanceToTarget > constants::shooter::kDistanceUpperBound || distanceToTarget < constants::shooter::kDistanceLowerBound)
+        INFO_LOG("Current distance to target is out of bounds.");
     
-//     units::revolutions_per_minute_t rpm_estimation = 0_rpm;
+    units::revolutions_per_minute_t rpm_estimation = 0_rpm;
 
-//     SetShooterVelocity(rpm_estimation);
-//     */
-// }
+    SetShooterVelocity(rpm_estimation);
+    */
+}
 /*
 void Shooter::SetShooterVelocity(units::revolutions_per_minute_t angularVelocity)
 {
