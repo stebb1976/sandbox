@@ -110,6 +110,7 @@ class RobotContainer {
   ExtendLift m_extendLiftCommand {m_lift};
   RetractLift m_retractLiftCommand {m_lift};
   BalanceOnLift m_balanceOnLift {m_lift};
+  
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //Buttons
